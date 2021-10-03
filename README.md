@@ -1,28 +1,27 @@
-# CloneChecker
+# Clone checker guide
 
-Python application that checks task for unique code.
+Клон чекер позволяет находить скопированные частично либо полностью решения с приемлемой степенью достоверности.
 
-Install Python Requirements:
-```pip3 install -r requirements.txt```
+Порядок использования:
+	
+1. Установить Python https://www.python.org/downloads/
+2. Поставить локально https://github.com/AlreadyBored/CloneChecker
+3. Установить зависимости Python при помощи pip3 `pip3 install -r requirements.txt`, при необходимости добавить его в `PATH`
+4. Сгенерировать себе `Github token` (Setting => Developer settings => Personal access tokens)
+5. Сделать из `token.cfg.example` `token.cfg` и подставить туда свой токен из п. 4
+6. Настроить параметры в `config.cfg`:
+* `download_data` (true/false) - определяет, будут ли репозитории склонированы в папку `data` или будут проверяться удаленно (лучше ставить true
+* `limit` (0-0.99) - процент скопированного контента в работах, которые попадут в итоговую выборку (например, установка при установке значения 0.60 в итоговом списке работ окажутся те, в которых 60 и более процентов повторяют чью-то работу)
+* `bundle_filename` (string) - название для бандла, в который собирается каждая работа для сравнения (в папке с загруженными работами каждая загруженная работа будет иметь свой бандл)
+* `recursion_limit` (integer) - предел количества рекурсивных заходов (ХЗ, что это)
+* `task_name` (string) - название папки, в которой будет лежать загруженный код
+* `compare_file` (string) - название csv-шки, которая лежит в папке scores и содержит 2 поля: ссылка на PR с решением и github id студента
+* `concat_pattern` (string) - паттерн для файлов, которые пойдут в бандл (например `*.ts`)
+* `csv_delimiter` (char) - разделитель в csv
+7. Запустить сам чекер `python prog.py` (при необходимости добавить в `PATH`).
 
-Download html paged with students score to `scores` page.
+NB! По пока что не выясненным причинам чекер нужно запускать **ДВАЖДЫ**, результат появляется после **второго** запуска.
 
-If you want to work with PRs you should use github token,
-rename token.cfg.example to token.cfg and add token to it.
+Появляется график распределения работ по количеству скопированных фрагментов, а также результирующий файл, в который попадают работы с процентом скопированного кода больше `limit`.
 
-Parameters can be set in `config.cfg` file:
- - download_data (true/false) - clone student's repo to `data` directory or check remotely
- - limit (0-0.99) - percent of unique check
- - bundle_filename (string) - bundle name for concatenated files or for repo file
- - recursion_limit (integer) - limit of max recursion steps
- - task_name (string) - name of task repository
- - compare_file (string) - compare file name (bundle_filename for concatenated files)
- - concat_pattern (string) - pattern for file concatenation
- - csv_delimiter (char) - cvs delimiter for parsing
-
-Run ```python prog.py``` to start application.
-
-Results can be found in:
- - crosscheck.txt
- - results.csv
- - graph.graphml
+Идем в папки с этими работами и сравниваем бандлы через любой diff tool.
