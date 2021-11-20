@@ -33,7 +33,8 @@ sys.setrecursionlimit(config.getint('Settings', 'recursion_limit'))
 SCRIPT_PATH = pathlib.Path(__file__).parent.absolute()
 COMPARE_FILENAME = config.get('Settings', 'compare_file')
 DOWNLOAD_DATA = config.getboolean('Settings', 'download_data')
-LIMIT = config.getfloat('Settings', 'limit')
+UPPER_LIMIT = config.getfloat('Settings', 'upper_limit')
+THRESHOLD = config.getfloat('Settings', 'threshold')
 BUNDLE_FILENAME = config.get('Settings', 'bundle_filename')
 TASK_NAME = config.get('Settings', 'task_name')
 CONCAT_PATTERN = config.get('Settings','concat_pattern')
@@ -66,6 +67,7 @@ def concatenateAll(path, repos, taskName, pattern):
     nodeModules = os.path.join(currentPath, 'node_modules')
     docDir = os.path.join(currentPath, 'doc')
     testDir = os.path.join(currentPath, 'test')
+    extensionsDir = os.path.join(currentPath, 'extensions')
     
     if os.path.exists(nodeModules):
       shutil.rmtree(nodeModules)
@@ -75,6 +77,9 @@ def concatenateAll(path, repos, taskName, pattern):
 
     if os.path.exists(testDir):
       shutil.rmtree(testDir)
+    
+    if os.path.exists(extensionsDir):
+      shutil.rmtree(extensionsDir)
 
     if os.path.exists(currentPath):
       text = concat_files(currentPath, pattern)
@@ -380,11 +385,11 @@ class UserList:
 
     for userB in self.usersTasks:
       if user != userB:
-        res = self.cloneCheck(user, userB, LIMIT)
+        res = self.cloneCheck(user, userB, UPPER_LIMIT)
 
         if res != False:
           values.append(res * 100)
-        if res >= LIMIT:
+        if res >= THRESHOLD and res <= UPPER_LIMIT:
           line = self.createResultRow(user, userB, res)
 
           if graph != None:
