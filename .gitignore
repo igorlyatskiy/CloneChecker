@@ -1,6 +1,8 @@
 data/
 results/
+scores/
+graphs/
 results.csv
 crosscheck.txt
 graph.graphml
-token.cfg
+*.cfg
